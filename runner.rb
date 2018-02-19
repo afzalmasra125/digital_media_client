@@ -2,28 +2,48 @@ require 'unirest'
 
 system 'clear'
 
+  puts "Welcome to Digital Media"
+  puts "please select an option"
+  puts "  [1] Display all movie"
+  puts "  [2] Search a movie"
+  puts "  [3] create a movie"
+  puts "  [4] Update a movie"
+  puts "  [5] Delete a movie"
 
+input_option = gets.chomp
 
+ if input_option == "1"
+    response = Unirest.get("http://localhost:3000/movies")
+    movies = response.body
+    puts JSON.pretty_generate(movies)
+elsif input_option == "2"  
+      puts "Search by a Movie id"
+      input_id = gets.chomp
+      response = Unirest.get("http://localhost:3000/movies/#{input_id}")
+      movies = response.body
+      puts JSON.pretty_generate(movies)
+elsif input_option == "3"
     puts "Enter information for a new movie"
     client_params = {}
 
-    print "Movie Name: "
+    print "Movie Name:- "
       client_params[:name] = gets.chomp
 
-     print "Summary"
+     print "Summary:-"
 
     client_params[:summary] = gets.chomp
 
-    print "Actor: "
+    print "Actor:- "
     client_params[:actor] = gets.chomp
 
-     print "Rating: "
+     print "Rating:- "
      client_params[:rating] = gets.chomp
 
-     print "Genre: "
+     print "Genre:- "
      client_params[:genre] = gets.chomp
 
-     p client_params
+     print "Content url:- "
+     client_params[:content_url] = gets.chomp
 
      response = Unirest.post(
                            "http://localhost:3000/movies",
@@ -32,23 +52,8 @@ system 'clear'
 
       movies = response.body
       puts JSON.pretty_generate(movies)
-
-    # if response.code == 200
-    #   movies = response.body
-    #   puts JSON.pretty_generate(movies)
-    # else
-    #   errors = response.body["errors"]
-    #   puts
-    #   puts "Your movie did not save"
-    #   puts "please look at the following reasons"
-    #   puts "------------------------------------"
-    #   errors.each do |error|
-    #     puts error
-    #   end
-  #   end
-  # end
-
-  print "Enter a movie id: "
+  elsif input_option == "4"
+    print "Enter a movie id: "
     input_id = gets.chomp
 
     response = Unirest.get("http://localhost:3000/movies/#{input_id}")
@@ -57,23 +62,23 @@ system 'clear'
     puts "Enter new information for movie ##{input_id}"
     client_params = {}
 
-    print "First Name (#{movie["first_name"]}): "
-    client_params[:first_name] = gets.chomp
+    print "Movie Name (#{movie["name"]}): "
+    client_params[:name] = gets.chomp
 
-    print "Middle Name (#{movie["middle_name"]}): "
-    client_params[:middle_name] = gets.chomp
+    print "Summary (#{movie["summary"]}): "
+    client_params[:summary] = gets.chomp
 
-    print "Last Name (#{movie["last_name"]}): "
-    client_params[:last_name] = gets.chomp
+    print "Actor (#{movie["actor"]}): "
+    client_params[:actor] = gets.chomp
 
-    print "Email (#{movie["email"]}): "
-    client_params[:email] = gets.chomp
+    print "Rating (#{movie["rating"]}): "
+    client_params[:rating] = gets.chomp
 
-    print "Bio (#{movie["bio"]}): "
-    client_params[:bio] = gets.chomp
+    print "Genre (#{movie["genre"]}): "
+    client_params[:genre] = gets.chomp
 
-    print "Phone Number (#{movie["phone_number"]}): "
-    client_params[:phone_number] = gets.chomp
+    print "content url (#{movie["content_url"]}): "
+    client_params[:content_url] = gets.chomp
 
     client_params.delete_if {|key, value| value.empty? }
 
@@ -81,18 +86,14 @@ system 'clear'
                             "http://localhost:3000/movies/#{input_id}",
                             parameters: client_params
                             )
+      movies = response.body
+      puts JSON.pretty_generate(movies)
 
-    if response.code == 200
+    elsif input_option == "5"
+      print "Enter a movie id: "
+      input_id = gets.chomp
+      response = Unirest.delete("http://localhost:3000/movies/#{input_id}")
       movie = response.body
-      puts JSON.pretty_generate(movie)
-    else
-      errors = response.body["errors"]
-      puts
-      puts "Your movie did not update"
-      puts "please look at the following reasons"
-      puts "------------------------------------"
-      errors.each do |error|
-        puts error
-      end
+      puts movie["message"]
     end
-  end
+  
