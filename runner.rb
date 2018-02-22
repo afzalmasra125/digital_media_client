@@ -11,7 +11,7 @@ system 'clear'
   puts "  [5] Delete a movie"
   puts "  [register] Register a user"
   puts "  [login] Log in"
-  puts "  [ogout] Log out" 
+  puts "  [logout] Log out" 
 
 input_option = gets.chomp
 
@@ -145,7 +145,12 @@ elsif input_option == "3"
                                                                                   }
                                                                                 }
                                                                               )
-                                                puts JSON.pretty_generate(response.body)
+                puts JSON.pretty_generate(response.body)
+                jwt = response.body["jwt"]
+                Unirest.default_header("Authorization", "Bearer #{jwt}")
+      elsif input_option == "logout"
+        jwt = ""
+        Unirest.clear_default_headers
        end 
     
   
