@@ -9,6 +9,9 @@ system 'clear'
   puts "  [3] create a movie"
   puts "  [4] Update a movie"
   puts "  [5] Delete a movie"
+  puts "  [register] Register a user"
+  puts "  [login] Log in"
+  puts "  [ogout] Log out" 
 
 input_option = gets.chomp
 
@@ -44,6 +47,9 @@ elsif input_option == "3"
 
      print "Content url:- "
      client_params[:content_url] = gets.chomp
+
+     print "Image url:-"
+     client_params[:image_url] = gets.chomp
 
      response = Unirest.post(
                            "http://localhost:3000/movies",
@@ -95,5 +101,74 @@ elsif input_option == "3"
       response = Unirest.delete("http://localhost:3000/movies/#{input_id}")
       movie = response.body
       puts movie["message"]
-    end
+
+    elsif input_option =="register"
+      puts "Register for New User"
+      puts
+
+        client_params = {}
+
+        print "First Name: "
+        client_params[:first_name] = gets.chomp
+
+         print "Last Name: "
+         client_params[:last_name] = gets.chomp
+
+         print "Email: "
+         client_params[:email] = gets.chomp
+
+         print "Password: "
+         client_params[:password] = gets.chomp
+
+          print "Password Confirmation: "
+         client_params[:password_confirmation] = gets.chomp
+
+        response = Unirest.post(
+                           "http://localhost:3000/users",
+                             parameters: client_params
+                             )
+        puts response.body
+    elsif input_option == "login"
+      puts "Login"
+      puts 
+      print "Email: "
+      input_email = gets.chomp
+
+      print "Password: "
+      input_password = gets.chomp
+
+      response = Unirest.post("http://localhost:3000/user_token", 
+                                                                  parameters:{
+                                                                               auth: {
+                                                                                  email:input_email,
+                                                                                  password:input_password
+                                                                                  }
+                                                                                }
+                                                                              )
+                                                puts JSON.pretty_generate(response.body)
+       end 
+    
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
