@@ -6,18 +6,26 @@ system 'clear'
   puts "Welcome to Digital Media"
   puts "please select an option"
   puts "  [1] Display all movie"
-  puts "  [2] Search a movie"
+  puts "  [1.1] Search a movie by name"
+  puts "  [2] Search a movie by Id"
   puts "  [3] create a movie"
   puts "  [4] Update a movie"
   puts "  [5] Delete a movie"
   puts "  [register] Register a user"
   puts "  [login] Log in"
   puts "  [logout] Log out" 
+  puts "  [q] Quit the Digital Media"
 
 input_option = gets.chomp
 
  if input_option == "1"
     response = Unirest.get("http://localhost:3000/movies")
+    movies = response.body
+    puts JSON.pretty_generate(movies)
+elsif input_option == "1.1"
+    print "Enter a movie name: "
+    search_term = gets.chomp
+    response = Unirest.get("http://localhost:3000/movies?search=#{search_term}")
     movies = response.body
     puts JSON.pretty_generate(movies)
 elsif input_option == "2"  
@@ -26,6 +34,17 @@ elsif input_option == "2"
       response = Unirest.get("http://localhost:3000/movies/#{input_id}")
       movies = response.body
       puts JSON.pretty_generate(movies)
+
+      puts "Press Enter to continue or type [w] to add the watchlist"
+      user_choice = gets.chomp
+      if user_choice === 'w'
+          client_params = 
+                          {
+                            movie_id: input_id
+                          }
+        json_data = Unirest.post("/watchlists", client_params)
+        puts JSON.pretty_generate(json_data)
+      end 
 elsif input_option == "3"
   puts "Enter information for a new movie"
   client_params = {}
@@ -146,7 +165,7 @@ elsif input_option == "logout"
       jwt = ""
       Unirest.clear_default_headers
 elsif input_option == "q"
-  puts "thank you for visiting the Move Database"
+  puts "Thank you for visiting the Digital Media"
   exit
 end
   gets.chomp
