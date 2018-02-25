@@ -1,5 +1,6 @@
 require 'unirest'
 
+while true
 system 'clear'
 
   puts "Welcome to Digital Media"
@@ -26,39 +27,39 @@ elsif input_option == "2"
       movies = response.body
       puts JSON.pretty_generate(movies)
 elsif input_option == "3"
-    puts "Enter information for a new movie"
-    client_params = {}
+  puts "Enter information for a new movie"
+  client_params = {}
 
-    print "Movie Name:- "
-      client_params[:name] = gets.chomp
+  print "Movie Name:- "
+    client_params[:name] = gets.chomp
 
      print "Summary:-"
 
-    client_params[:summary] = gets.chomp
+  client_params[:summary] = gets.chomp
 
-    print "Actor:- "
-    client_params[:actor] = gets.chomp
+  print "Actor:- "
+  client_params[:actor] = gets.chomp
 
-     print "Rating:- "
-     client_params[:rating] = gets.chomp
+  print "Rating:- "
+  client_params[:rating] = gets.chomp
 
-     print "Genre:- "
-     client_params[:genre] = gets.chomp
+  print "Genre:- "
+  client_params[:genre] = gets.chomp
 
-     print "Content url:- "
-     client_params[:content_url] = gets.chomp
+  print "Content url:- "
+  client_params[:content_url] = gets.chomp
 
-     print "Image url:-"
-     client_params[:image_url] = gets.chomp
+  print "Image url:-"
+  client_params[:image_url] = gets.chomp
 
-     response = Unirest.post(
+  response = Unirest.post(
                            "http://localhost:3000/movies",
                              parameters: client_params
                              )
 
       movies = response.body
       puts JSON.pretty_generate(movies)
-  elsif input_option == "4"
+elsif input_option == "4"
     print "Enter a movie id: "
     input_id = gets.chomp
 
@@ -92,27 +93,23 @@ elsif input_option == "3"
                             "http://localhost:3000/movies/#{input_id}",
                             parameters: client_params
                             )
-      movies = response.body
-      puts JSON.pretty_generate(movies)
-
-    elsif input_option == "5"
-      print "Enter a movie id: "
-      input_id = gets.chomp
-      response = Unirest.delete("http://localhost:3000/movies/#{input_id}")
-      movie = response.body
-      puts movie["message"]
-
-    elsif input_option =="register"
+    movies = response.body
+    puts JSON.pretty_generate(movies)
+elsif input_option == "5"
+    print "Enter a movie id: "
+    input_id = gets.chomp
+    response = Unirest.delete("http://localhost:3000/movies/#{input_id}")
+    movie = response.body
+    puts movie["message"]
+elsif input_option =="register"
       puts "Register for New User"
       puts
+      client_params = {}
+      print "First Name: "
+      client_params[:first_name] = gets.chomp
 
-        client_params = {}
-
-        print "First Name: "
-        client_params[:first_name] = gets.chomp
-
-         print "Last Name: "
-         client_params[:last_name] = gets.chomp
+      print "Last Name: "
+      client_params[:last_name] = gets.chomp
 
          print "Email: "
          client_params[:email] = gets.chomp
@@ -128,7 +125,7 @@ elsif input_option == "3"
                              parameters: client_params
                              )
         puts response.body
-    elsif input_option == "login"
+elsif input_option == "login"
       puts "Login"
       puts 
       print "Email: "
@@ -138,20 +135,23 @@ elsif input_option == "3"
       input_password = gets.chomp
 
       response = Unirest.post("http://localhost:3000/user_token", 
-                                                                  parameters:{
-                                                                               auth: {
-                                                                                  email:input_email,
-                                                                                  password:input_password
-                                                                                  }
-                                                                                }
-                                                                              )
-                puts JSON.pretty_generate(response.body)
-                jwt = response.body["jwt"]
-                Unirest.default_header("Authorization", "Bearer #{jwt}")
-      elsif input_option == "logout"
-        jwt = ""
-        Unirest.clear_default_headers
-       end 
+                                                    parameters:{
+                                                          auth: {email:input_email, password:input_password}
+                                                        }
+                                                     )
+      puts JSON.pretty_generate(response.body)
+      jwt = response.body["jwt"]
+      Unirest.default_header("Authorization", "Bearer #{jwt}")
+elsif input_option == "logout"
+      jwt = ""
+      Unirest.clear_default_headers
+elsif input_option == "q"
+  puts "thank you for visiting the Move Database"
+  exit
+end
+  gets.chomp
+end
+
     
   
 
