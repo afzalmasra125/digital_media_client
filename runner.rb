@@ -42,7 +42,7 @@ elsif input_option == "2"
                           {
                             movie_id: input_id
                           }
-        json_data = Unirest.post("/watchlists", client_params)
+        json_data = Unirest.post("http://localhost:3000/watchlists", client_params)
         puts JSON.pretty_generate(json_data)
       end 
 elsif input_option == "3"
